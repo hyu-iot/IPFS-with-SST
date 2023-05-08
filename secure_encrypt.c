@@ -14,7 +14,7 @@
 
 #include "c_crypto.h"
 
-
+#define IV_SIZE 16
 #define MAX 1000000
 
 void print_buf(unsigned char *buf, size_t size) {
@@ -124,36 +124,47 @@ int main ()
     }
     printf("hello\n");
     printf("File size: %ld\n", bufsize);
-    unsigned int iv_size = 16;
-    unsigned char iv[iv_size];
-    unsigned int encrypted_length = ((bufsize / iv_size) + 1) * iv_size;
-    unsigned char encrypted[encrypted_length];
+    unsigned char iv[IV_SIZE];
+    unsigned char prov_info[] = "yeongbin";
+    int prov_info_len = sizeof(prov_info);
+    printf("%d,\n",prov_info_len);
+    unsigned int encrypted_length = ((bufsize / IV_SIZE) + 1) * IV_SIZE;
+    unsigned char *encrypted = (unsigned char *)malloc(encrypted_length+1+IV_SIZE+1+prov_info_len);
     // printf("error1\n");
-    generate_nonce(iv_size, iv);
+    generate_nonce(IV_SIZE, iv);
     printf("IV:");
     print_buf(iv, 16);
     printf("File buffer:");
     print_buf(file_buf,10);
+
+    encrypted[0] = prov_info_len;
+    memcpy(encrypted+1,prov_info,prov_info_len);
+    encrypted[prov_info_len+1] = IV_SIZE;
+    memcpy(encrypted+1+prov_info_len+1,iv,IV_SIZE);
     // printf("!!!!!!! %s !!!!!!\n", file_buf);
     //// encrypt ////
     AES_CBC_128_encrypt(file_buf, bufsize, Byte_keys, cipher_key_size, iv,
-                        iv_size, encrypted, &encrypted_length);
+                        IV_SIZE, encrypted+1+IV_SIZE+1+prov_info_len, &encrypted_length);
     printf("Encrypted length: %ld\n", encrypted_length);
     printf("Enc_value:");
-    print_buf(encrypted, 10);
+    print_buf(encrypted+1+IV_SIZE+1+prov_info_len, 10);
     
+    printf("Provider and IV value: ");
+    print_buf(encrypted, 1+IV_SIZE+1+prov_info_len);
     //// encrypt save ////
     fenc = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/enc.txt", "w");
     fwrite(encrypted, 1, encrypted_length, fenc);
     fclose(fenc);
-    //// decrypt ////
-    unsigned int ret_length = (encrypted_length + iv_size) / iv_size * iv_size;
-    unsigned char *ret = (unsigned char *)malloc(encrypted_length);
-    AES_CBC_128_decrypt(encrypted, encrypted_length, Byte_keys, cipher_key_size, iv,
-                        iv_size, ret, &ret_length);
-    printf("Eecrypted length: %ld\n", ret_length);
 
-    printf("Eec_value:");
+
+    //// decrypt ////
+    unsigned int ret_length = (encrypted_length + IV_SIZE) / IV_SIZE * IV_SIZE;
+    unsigned char *ret = (unsigned char *)malloc(encrypted_length);
+    AES_CBC_128_decrypt(encrypted+1+IV_SIZE+1+prov_info_len, encrypted_length, Byte_keys, cipher_key_size, iv,
+                        IV_SIZE, ret, &ret_length);
+    printf("Encrypted length: %ld\n", ret_length);
+    
+    printf("Enc_value:");
     print_buf(ret, 10);
 
     fout = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/result.txt", "w");
