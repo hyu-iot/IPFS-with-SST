@@ -49,7 +49,7 @@ int main ()
     memcpy(buffer,buff+a,b-a+1);    
     printf("%s\n", buffer);
     // Hash value save
-    fout = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/result.txt", "w");
+    fout = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/hash_result.txt", "w");
     fwrite(buffer, 1, b-a, fout);
     pclose(fp);
     fclose(fout);
