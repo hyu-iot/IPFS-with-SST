@@ -200,6 +200,7 @@ int main ()
     fwrite(buffer, 1, b-a+1, fout_0);
     pclose(fp);
     fclose(fout_0);
+    
 
     //// decrypt ////
     unsigned int ret_length = (encrypted_length + IV_SIZE) / IV_SIZE * IV_SIZE;
