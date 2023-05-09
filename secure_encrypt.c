@@ -90,10 +90,10 @@ void AES_CBC_128_decrypt(unsigned char *encrypted,
         print_last_error("EVP_DecryptUpdate failed");
     }
     unsigned int temp_len;
-    if (!EVP_DecryptFinal_ex(ctx, ret + *ret_length, (int *)&temp_len)) {
-        EVP_CIPHER_CTX_free(ctx);
-        print_last_error("EVP_DecryptFinal_ex failed");
-    }
+    // if (!EVP_DecryptFinal_ex(ctx, ret + *ret_length, (int *)&temp_len)) {
+    //     EVP_CIPHER_CTX_free(ctx);
+    //     print_last_error("EVP_DecryptFinal_ex failed");
+    // }
     *ret_length += temp_len;
     EVP_CIPHER_CTX_free(ctx);
 }
@@ -131,8 +131,8 @@ int main ()
     unsigned char prov_info[] = "yeongbin";
     int prov_info_len = sizeof(prov_info);
     printf("%d,\n",prov_info_len);
-    unsigned int encrypted_length = ((bufsize / IV_SIZE) + 1) * IV_SIZE;
-    unsigned char *encrypted = (unsigned char *)malloc(encrypted_length+1+IV_SIZE+1+prov_info_len);
+    unsigned int encrypted_length = (((bufsize) / IV_SIZE) + 1) * IV_SIZE;
+    unsigned char *encrypted = (unsigned char *)malloc(encrypted_length);
     // printf("error1\n");
     generate_nonce(IV_SIZE, iv);
     printf("IV:");
@@ -140,23 +140,24 @@ int main ()
     printf("File buffer:");
     print_buf(file_buf,10);
 
-    encrypted[0] = prov_info_len;
-    memcpy(encrypted+1,prov_info,prov_info_len);
-    encrypted[prov_info_len+1] = IV_SIZE;
-    memcpy(encrypted+1+prov_info_len+1,iv,IV_SIZE);
     // printf("!!!!!!! %s !!!!!!\n", file_buf);
     //// encrypt ////
     AES_CBC_128_encrypt(file_buf, bufsize, Byte_keys, cipher_key_size, iv,
-                        IV_SIZE, encrypted+1+IV_SIZE+1+prov_info_len, &encrypted_length);
+                        IV_SIZE, encrypted, &encrypted_length);
     printf("Encrypted length: %ld\n", encrypted_length);
     printf("Enc_value:");
-    print_buf(encrypted+1+IV_SIZE+1+prov_info_len, 10);
+    print_buf(encrypted, 10);
     
-    printf("Provider and IV value: ");
-    print_buf(encrypted, 1+IV_SIZE+1+prov_info_len);
     //// encrypt save ////
     fenc = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/enc.txt", "w");
-    fwrite(encrypted, 1, encrypted_length, fenc);
+    unsigned char * enc_save = (unsigned char *) malloc(encrypted_length+1+IV_SIZE+1+prov_info_len);
+    enc_save[0] = prov_info_len;
+    memcpy(enc_save+1,prov_info,prov_info_len);
+    enc_save[prov_info_len+1] = IV_SIZE;
+    memcpy(enc_save+1+prov_info_len+1,iv,IV_SIZE);
+    memcpy(enc_save+1+prov_info_len+1+IV_SIZE,encrypted,encrypted_length);
+    printf("Total Length: %d\n",encrypted_length+1+IV_SIZE+1+prov_info_len);
+    fwrite(enc_save, 1, encrypted_length+1+IV_SIZE+1+prov_info_len, fenc);
     fclose(fenc);
 
     char buff[BUFF_SIZE];
@@ -200,16 +201,15 @@ int main ()
     fwrite(buffer, 1, b-a+1, fout_0);
     pclose(fp);
     fclose(fout_0);
-    
 
     //// decrypt ////
     unsigned int ret_length = (encrypted_length + IV_SIZE) / IV_SIZE * IV_SIZE;
     unsigned char *ret = (unsigned char *)malloc(encrypted_length);
-    AES_CBC_128_decrypt(encrypted+1+IV_SIZE+1+prov_info_len, encrypted_length, Byte_keys, cipher_key_size, iv,
+    AES_CBC_128_decrypt(encrypted, encrypted_length, Byte_keys, cipher_key_size, iv,
                         IV_SIZE, ret, &ret_length);
     printf("Encrypted length: %ld\n", ret_length);
     
-    printf("Enc_value:");
+    printf("Dec_value:");
     print_buf(ret, 10);
 
     fout = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/result.txt", "w");
