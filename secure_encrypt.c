@@ -16,6 +16,8 @@
 
 #define IV_SIZE 16
 #define MAX 1000000
+#define BUFF_SIZE 100
+
 
 void print_buf(unsigned char *buf, size_t size) {
     char hex[size * 3 + 1];
@@ -99,6 +101,7 @@ void AES_CBC_128_decrypt(unsigned char *encrypted,
 int main ()
 {
     FILE *fin, *fout, *fenc;
+
     unsigned char Byte_keys[] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
     unsigned int cipher_key_size = 16;
     fin = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/plain_text.txt","r");
@@ -156,6 +159,47 @@ int main ()
     fwrite(encrypted, 1, encrypted_length, fenc);
     fclose(fenc);
 
+    char buff[BUFF_SIZE];
+    FILE *fp, *fout_0;
+
+    fp = popen("ipfs add enc.txt", "r");
+    if (NULL == fp)
+    {
+            perror("popen() 실패");
+            return -1;
+    }
+
+    while (fgets(buff, BUFF_SIZE, fp))
+        printf("%s\n", buff);
+    int a, b = 0;
+    for (int i=0; i<BUFF_SIZE;i++)
+    {
+        // printf("%d %x \n", i,buff[i]);
+        if (a==0 &(buff[i] == 0x20))
+            {
+                // printf("! %x! ", buff[i]);
+                a = i+1;
+            }
+        else if (a!=0 & (buff[i] == 0x20))
+            {
+                // printf("! %x !", buff[i]);
+                b = i-1;
+                break;
+            }
+
+    }
+    printf("a %d b %d : %x %x\n",a,b, buff[a], buff[b]);
+    // a~b 까지 저장
+
+    unsigned char *buffer = NULL;
+    buffer = malloc(sizeof(char)* (b-a));
+    memcpy(buffer,buff+a,b-a+1);    
+    printf("%s\n", buffer);
+    // Hash value save
+    fout_0 = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/hash_result.txt", "w");
+    fwrite(buffer, 1, b-a+1, fout_0);
+    pclose(fp);
+    fclose(fout_0);
 
     //// decrypt ////
     unsigned int ret_length = (encrypted_length + IV_SIZE) / IV_SIZE * IV_SIZE;
