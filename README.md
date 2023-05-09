@@ -15,5 +15,5 @@ The project for IPFS applying to SST
   - ./se.o
 
 - Other Raspberry Pi4 code
-  - gcc rpi_experiment.c -o re.o -lcrypto -lssl
-  - ./re.o
+  - gcc command_cat.c -o cc.o -lcrypto
+  - ./cc.o
