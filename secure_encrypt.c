@@ -98,6 +98,42 @@ void AES_CBC_128_decrypt(unsigned char *encrypted,
     EVP_CIPHER_CTX_free(ctx);
 }
 
+void ipfs_add_command_save_result()
+{
+    char buff[BUFF_SIZE];
+    FILE *fp, *fout_0;
+    fp = popen("ipfs add enc.txt", "r");
+    if (NULL == fp)
+    {
+            perror("popen() 실패");
+    }
+    while (fgets(buff, BUFF_SIZE, fp))
+        printf("%s\n", buff);
+    int a, b = 0;
+    for (int i=0; i<BUFF_SIZE;i++)
+    {
+        if (a==0 &(buff[i] == 0x20))
+            {
+                a = i+1;
+            }
+        else if (a!=0 & (buff[i] == 0x20))
+            {
+                b = i-1;
+                break;
+            }
+    }
+    unsigned char *buffer = NULL;
+    buffer = malloc(sizeof(char)* (b-a));
+    memcpy(buffer,buff+a,b-a+1);    
+    printf("Hash value: %s\n", buffer);
+    // Hash value save
+    fout_0 = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/hash_result.txt", "w");
+    fwrite(buffer, 1, b-a+1, fout_0);
+    printf("Save the file for hash value");
+    pclose(fp);
+    fclose(fout_0);
+}
+
 int main ()
 {
     FILE *fin, *fout, *fenc;
@@ -123,14 +159,15 @@ int main ()
                 file_buf[newLen++] = '\0'; 
             }
         }
-    fclose(fin);
     }
+    // bufsize = file_load(fin, file_buf);
+    fclose(fin);
     printf("hello\n");
     printf("File size: %ld\n", bufsize);
     unsigned char iv[IV_SIZE];
     unsigned char prov_info[] = "yeongbin";
     int prov_info_len = sizeof(prov_info);
-    printf("%d,\n",prov_info_len);
+    printf("%d %d,\n",prov_info_len, IV_SIZE);
     unsigned int encrypted_length = (((bufsize) / IV_SIZE) + 1) * IV_SIZE;
     unsigned char *encrypted = (unsigned char *)malloc(encrypted_length);
     // printf("error1\n");
@@ -159,48 +196,7 @@ int main ()
     printf("Total Length: %d\n",encrypted_length+1+IV_SIZE+1+prov_info_len);
     fwrite(enc_save, 1, encrypted_length+1+IV_SIZE+1+prov_info_len, fenc);
     fclose(fenc);
-
-    char buff[BUFF_SIZE];
-    FILE *fp, *fout_0;
-
-    fp = popen("ipfs add enc.txt", "r");
-    if (NULL == fp)
-    {
-            perror("popen() 실패");
-            return -1;
-    }
-
-    while (fgets(buff, BUFF_SIZE, fp))
-        printf("%s\n", buff);
-    int a, b = 0;
-    for (int i=0; i<BUFF_SIZE;i++)
-    {
-        // printf("%d %x \n", i,buff[i]);
-        if (a==0 &(buff[i] == 0x20))
-            {
-                // printf("! %x! ", buff[i]);
-                a = i+1;
-            }
-        else if (a!=0 & (buff[i] == 0x20))
-            {
-                // printf("! %x !", buff[i]);
-                b = i-1;
-                break;
-            }
-
-    }
-    printf("a %d b %d : %x %x\n",a,b, buff[a], buff[b]);
-    // a~b 까지 저장
-
-    unsigned char *buffer = NULL;
-    buffer = malloc(sizeof(char)* (b-a));
-    memcpy(buffer,buff+a,b-a+1);    
-    printf("%s\n", buffer);
-    // Hash value save
-    fout_0 = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/hash_result.txt", "w");
-    fwrite(buffer, 1, b-a+1, fout_0);
-    pclose(fp);
-    fclose(fout_0);
+    ipfs_add_command_save_result();
 
     //// decrypt ////
     unsigned int ret_length = (encrypted_length + IV_SIZE) / IV_SIZE * IV_SIZE;
