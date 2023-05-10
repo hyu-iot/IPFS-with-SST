@@ -1,6 +1,10 @@
 # IPFS-with-SST
 The project for IPFS applying to SST
 
+- SST(Secure Swarm Toolkit)
+  - Provide the access authorization through the secure handshakes
+  - https://github.com/iotauth/iotauth 
+
 - Environment Setting
   - Install the Raspberry Pi 4 in other places such as Seoul and US. 
 
