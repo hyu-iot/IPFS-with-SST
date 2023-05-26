@@ -102,7 +102,15 @@ void ipfs_add_command_save_result()
 {
     char buff[BUFF_SIZE];
     FILE *fp, *fout_0;
-    fp = popen("ipfs add enc.txt", "r");
+    char *file_name = "enc.txt";
+    if (0 == access(file_name,F_OK))
+    {
+        printf("%s 파일이 존재합니다.\n", file_name);
+    }
+    else
+    {
+        fp = popen("ipfs add enc.txt", "r");
+    }
     if (NULL == fp)
     {
             perror("popen() 실패");
@@ -127,7 +135,7 @@ void ipfs_add_command_save_result()
     memcpy(buffer,buff+a,b-a+1);    
     printf("Hash value: %s\n", buffer);
     // Hash value save
-    fout_0 = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/hash_result.txt", "w");
+    fout_0 = fopen("/Users/yeongbin/Desktop/project/IPFS-with-SST/hash_result.txt", "w");
     fwrite(buffer, 1, b-a+1, fout_0);
     printf("Save the file for hash value");
     pclose(fp);
@@ -140,7 +148,7 @@ int main ()
 
     unsigned char Byte_keys[] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
     unsigned int cipher_key_size = 16;
-    fin = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/plain_text.txt","r");
+    fin = fopen("/Users/yeongbin/Desktop/project/IPFS-with-SST/plain_text.txt","r");
     unsigned char *file_buf = NULL;
     unsigned long bufsize ;
     if (fin != NULL) {
@@ -170,14 +178,12 @@ int main ()
     printf("%d %d,\n",prov_info_len, IV_SIZE);
     unsigned int encrypted_length = (((bufsize) / IV_SIZE) + 1) * IV_SIZE;
     unsigned char *encrypted = (unsigned char *)malloc(encrypted_length);
-    // printf("error1\n");
     generate_nonce(IV_SIZE, iv);
     printf("IV:");
     print_buf(iv, 16);
     printf("File buffer:");
     print_buf(file_buf,10);
 
-    // printf("!!!!!!! %s !!!!!!\n", file_buf);
     //// encrypt ////
     AES_CBC_128_encrypt(file_buf, bufsize, Byte_keys, cipher_key_size, iv,
                         IV_SIZE, encrypted, &encrypted_length);
@@ -186,7 +192,16 @@ int main ()
     print_buf(encrypted, 10);
     
     //// encrypt save ////
-    fenc = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/enc.txt", "w");
+    char *file_name = "enc.txt";
+    if (0 == access(file_name,F_OK))
+    {
+        printf("%s 파일이 존재합니다.\n", file_name);
+        exit();
+    }
+    else
+    {
+        fenc = fopen("enc.txt", "w");
+    }
     unsigned char * enc_save = (unsigned char *) malloc(encrypted_length+1+IV_SIZE+1+prov_info_len);
     enc_save[0] = prov_info_len;
     memcpy(enc_save+1,prov_info,prov_info_len);
@@ -208,7 +223,7 @@ int main ()
     printf("Dec_value:");
     print_buf(ret, 10);
 
-    fout = fopen("/home/ipfs-3/Desktop/IPFS-with-SST/result.txt", "w");
+    fout = fopen("/Users/yeongbin/Desktop/project/IPFS-with-SST/result.txt", "w");
     fwrite(ret, 1,ret_length, fout);
     free(ret);
     fclose(fout);
