@@ -81,10 +81,19 @@ void free_session_key_list_t(session_key_list_t *session_key_list);
 // @param SST_ctx_t loaded SST_ctx_t to free
 void free_SST_ctx_t(SST_ctx_t *ctx);
 
+// Do command "ipfs add command" and save the hash value.
 void ipfs_add_command_save_result();
+
+// Encrypt the file with sessionkey and upload the file in IPFS environment.
+// @param SST_session_ctx_t session_ctx to encrypt the file
 void file_encrypt_upload(SST_session_ctx_t *session_ctx);
 
+// Download the file in IPFS environment and decrypt the file with sessionkey.
+// @param SST_session_ctx_t session_ctx to decrypt the file
 void file_download_decrypt(SST_session_ctx_t *session_ctx);
 
+// Transfer the data in datacenter
+// @param SST_session_ctx_t session_ctx SST_ctx_t ctx to upload the data.
+void transfer_data(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx);
 
 #endif  // C_API_H

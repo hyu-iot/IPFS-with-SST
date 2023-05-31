@@ -508,3 +508,8 @@ void file_download_decrypt(SST_session_ctx_t *session_ctx)
     fclose(fout);
 
 }
+
+void transfer_data(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
+{
+    
+}
