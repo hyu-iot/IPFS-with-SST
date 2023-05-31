@@ -508,8 +508,22 @@ void file_download_decrypt(SST_session_ctx_t *session_ctx)
     fclose(fout);
 
 }
-
-void transfer_data(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
+// transfer the information including hash value, request info, response info, sessionkey id.
+void request_to_datacenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
 {
-    
+    int sock;
+    connect_as_client((const char *)ctx->config->keycenter_ip_addr,
+                      (const char *)ctx->config->keycenter_port_num, &sock);
+    // TODO: make one buffer
+    session_ctx->s_key
+    ctx->config->name;
+    ctx->config->purpose;
+    ctx->config->keycenter_ip_addr;
+    ctx->config->keycenter_port_num;
+
+}
+
+void receive_from_datacenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
+{
+
 }

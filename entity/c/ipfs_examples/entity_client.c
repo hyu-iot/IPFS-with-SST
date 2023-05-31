@@ -10,8 +10,9 @@ int main(int argc, char *argv[]) {
     
     sleep(3);
     file_encrypt_upload(session_ctx);
+
     // transfer the information including hash value, request info, response info, sessionkey id.
-    transfer_data(session_ctx, ctx);
+    request_to_datacenter(session_ctx, ctx);
 
     free(session_ctx);
 
