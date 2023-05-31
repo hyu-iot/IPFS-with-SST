@@ -328,21 +328,16 @@ void ipfs_add_command_save_result()
     char buff[BUFF_SIZE];
     FILE *fp, *fout_0;
     char *file_name = "enc.txt";
-    if (0 == access(file_name,F_OK))
-    {
-        printf("%s 파일이 존재합니다.\n", file_name);
-    }
-    else
-    {
-        fp = popen("ipfs add enc.txt", "r");
-    }
+    fp = popen("ipfs add enc.txt", "r");
     if (NULL == fp)
     {
             perror("popen() failed");
     }
     while (fgets(buff, BUFF_SIZE, fp))
         printf("%s\n", buff);
-    
+    pclose(fp);
+    system("rm -rf enc.txt");
+    printf("enc.txt 삭제를 완료하였습니다.\n");
     int first_order = 0;
     int second_order = 0;
     for (int i=0; i<BUFF_SIZE;i++)
@@ -365,7 +360,6 @@ void ipfs_add_command_save_result()
     fout_0 = fopen("hash_result.txt", "w");
     fwrite(buffer, 1, second_order-first_order+1, fout_0);
     printf("Save the file for hash value");
-    pclose(fp);
     fclose(fout_0);
 }
 
@@ -447,18 +441,19 @@ void file_download_decrypt(SST_session_ctx_t *session_ctx)
 {
     unsigned int cipher_key_size = 16;
     FILE *fp, *fin, *fout;
-    char *file_name = "enc.txt";
+    char *file_name = "enc_server.txt";
     if (0 == access(file_name,F_OK))
     {
         printf("%s 파일이 존재합니다.\n", file_name);
+        return ;
     }
     else
     {
-        fp = popen("ipfs cat QmX5NKpskdhPeEBwVLztE3hKjYJF8mLi93qrM67orVfdAY > enc.txt", "r");
+        fp = popen("ipfs cat QmX5NKpskdhPeEBwVLztE3hKjYJF8mLi93qrM67orVfdAY > enc_server.txt", "r");
         pclose(fp);
     }
     
-    fin = fopen("enc.txt","r");
+    fin = fopen("enc_server.txt","r");
     unsigned char *file_buf = NULL;
     unsigned long bufsize ;
     if (fin != NULL) {
@@ -511,4 +506,5 @@ void file_download_decrypt(SST_session_ctx_t *session_ctx)
     fwrite(ret, 1,ret_length, fout);
     free(ret);
     fclose(fout);
+
 }

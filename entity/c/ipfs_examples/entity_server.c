@@ -46,6 +46,9 @@ int main(int argc, char *argv[]) {
     SST_session_ctx_t *session_ctx =
         server_secure_comm_setup(ctx, clnt_sock, &s_key_list);
 
+    // request the hash information.
+
+    sleep(5);
     file_download_decrypt(session_ctx);
     close(serv_sock);
     free_SST_ctx_t(ctx);
