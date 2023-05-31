@@ -196,7 +196,6 @@ int main ()
     if (0 == access(file_name,F_OK))
     {
         printf("%s 파일이 존재합니다.\n", file_name);
-        exit();
     }
     else
     {

@@ -19,7 +19,6 @@
 #define IV_SIZE 16
 #define MAX 1000000
 #define BUFF_SIZE 100
-#define MAX 1000000
 
 void print_buf(unsigned char *buf, size_t size) {
     char hex[size * 3 + 1];
