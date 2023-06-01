@@ -515,9 +515,14 @@ void request_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
     connect_as_client((const char *)ctx->config->keycenter_ip_addr,
                       (const char *)ctx->config->keycenter_port_num, &sock);
 
+    int key_id_size, name_size, purpose_size;
+    key_id_size = sizeof(session_ctx->s_key.key_id);
+    name_size = sizeof(ctx->config->name);
+    purpose_size = sizeof(ctx->config->purpose);
+
     int DATA_UPLOAD = 0;
     char buff[BUFF_SIZE];
-    FILE *fin, *fout_0;
+    FILE *fin;
     char *file_name = "hash_result.txt";
     fin = fopen(file_name,"r");
     unsigned char *file_buf = NULL;
@@ -539,11 +544,29 @@ void request_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
         }
     }
     fclose(fin);
-    
-    // TODO: make one buffer
-    // session_ctx->s_key
+    print_buf(session_ctx->s_key.key_id,key_id_size);
+    print_buf(ctx->config->name,name_size);
+    print_buf(ctx->config->purpose,purpose_size);
+
+    unsigned char data[MAX_PAYLOAD_LENGTH];
+    data[0] = DATA_UPLOAD;
+    // memcpy(temp, iv, iv_size);
+    // name, purpose, keyid, hash value
+    data[1] = name_size;
+    memcpy(data,ctx->config->name, name_size);
+    data[2+name_size] = purpose_size;
+    memcpy(data,ctx->config->purpose,purpose_size);
+    data[2+name_size+purpose_size] = key_id_size;
+    memcpy(data,session_ctx->s_key.key_id,key_id_size);
+    data[2+name_size+purpose_size+key_id_size] = bufsize;
+    memcpy(data, file_buf , bufsize);
+
+    // print_buf(data, )
+    // KEY_ID_SIZE;
     // ctx->config->name;
     // ctx->config->purpose;
+    // session_ctx->s_key.key_id;
+    // TODO: make one buffer
 
 }
 
