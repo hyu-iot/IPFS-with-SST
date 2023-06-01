@@ -5,8 +5,9 @@ import types
 import subprocess
 import time
 from datetime import datetime
-import psutil
 
+
+bytes_num = 1024
 
 sel = selectors.DefaultSelector()
 
@@ -29,10 +30,6 @@ def service_connection(key, mask):
             print(recv_data)
         else:
             print(f"Closing connection to {data.addr}")
-            for i,j in enumerate(client_list["sock"]):
-                if j == sock:
-                    del client_list["data"][i], client_list["id"][i], client_list["sock"][i]
-            print(client_list["id"])
             sel.unregister(sock)
 
     

@@ -359,7 +359,7 @@ void ipfs_add_command_save_result()
     // Hash value save
     fout_0 = fopen("hash_result.txt", "w");
     fwrite(buffer, 1, second_order-first_order+1, fout_0);
-    printf("Save the file for hash value");
+    printf("Save the file for hash value\n");
     fclose(fout_0);
 }
 
@@ -509,21 +509,48 @@ void file_download_decrypt(SST_session_ctx_t *session_ctx)
 
 }
 // transfer the information including hash value, request info, response info, sessionkey id.
-void request_to_datacenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
+void request_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
 {
     int sock;
     connect_as_client((const char *)ctx->config->keycenter_ip_addr,
                       (const char *)ctx->config->keycenter_port_num, &sock);
+
+    int DATA_UPLOAD = 0;
+    char buff[BUFF_SIZE];
+    FILE *fin, *fout_0;
+    char *file_name = "hash_result.txt";
+    fin = fopen(file_name,"r");
+    unsigned char *file_buf = NULL;
+    unsigned long bufsize ;
+    if (fin != NULL) {
+        if (fseek(fin, 0L, SEEK_END) == 0) {
+            bufsize = ftell(fin);
+            file_buf = malloc(sizeof(char) * (bufsize + 1));
+
+            // 이 내용이 없으면 제대로 동작하지 않음!!!
+            if (fseek(fin, 0L, SEEK_SET) != 0) { /* Error */ }
+
+            size_t newLen = fread(file_buf, sizeof(char), bufsize, fin);
+            if ( ferror( fin ) != 0 ) {
+                fputs("Error reading file", stderr);
+            } else {
+                file_buf[newLen++] = '\0'; 
+            }
+        }
+    }
+    fclose(fin);
+    
     // TODO: make one buffer
-    session_ctx->s_key
-    ctx->config->name;
-    ctx->config->purpose;
-    ctx->config->keycenter_ip_addr;
-    ctx->config->keycenter_port_num;
+    // session_ctx->s_key
+    // ctx->config->name;
+    // ctx->config->purpose;
 
 }
 
-void receive_from_datacenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
+void receive_from_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
 {
-
+    int sock;
+    connect_as_client((const char *)ctx->config->keycenter_ip_addr,
+                      (const char *)ctx->config->keycenter_port_num, &sock);
+    int DATA_DOWNLOAD = 1;
 }

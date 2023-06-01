@@ -10,8 +10,8 @@ const char authInfo_ip_address[] = "auth.ip.address";
 const char authInfo_port[] = "auth.port.number";
 const char entity_serverInfo_ip_address[] = "entity.server.ip.address";
 const char entity_serverInfo_port_number[] = "entity.server.port.number";
-const char keycenter_ip_address[] = "keycenter.port.number";
-const char keycenter_port_number[] = "keycenter.ip.address";
+const char keycenter_ip_address[] = "keycenter.ip.address";
+const char keycenter_port_number[] = "keycenter.port.number";
 const char network_protocol[] = "network.protocol";
 
 int get_key_value(char *ptr) {

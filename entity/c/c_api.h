@@ -94,11 +94,11 @@ void file_download_decrypt(SST_session_ctx_t *session_ctx);
 
 // Request the data to datacenter
 // @param SST_session_ctx_t session_ctx SST_ctx_t ctx to upload the data to datacenter.
-void request_to_datacenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx);
+void request_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx);
 
 // Receive the data from datacenter
 // @param SST_session_ctx_t session_ctx SST_ctx_t ctx to download the data from datacenter.
-void receive_from_datacenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx);
+void receive_from_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx);
 
 
 #endif  // C_API_H
