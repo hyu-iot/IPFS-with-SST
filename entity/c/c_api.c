@@ -547,7 +547,7 @@ void request_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
     print_buf(session_ctx->s_key.key_id,key_id_size);
     print_buf(ctx->config->name,name_size);
     print_buf(ctx->config->purpose,purpose_size);
-
+    print_buf(file_buf,bufsize);
     unsigned char data[MAX_PAYLOAD_LENGTH];
     data[0] = DATA_UPLOAD;
     // memcpy(temp, iv, iv_size);
@@ -556,12 +556,12 @@ void request_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
     memcpy(data,ctx->config->name, name_size);
     data[2+name_size] = purpose_size;
     memcpy(data,ctx->config->purpose,purpose_size);
-    data[2+name_size+purpose_size] = key_id_size;
+    data[3+name_size+purpose_size] = key_id_size;
     memcpy(data,session_ctx->s_key.key_id,key_id_size);
-    data[2+name_size+purpose_size+key_id_size] = bufsize;
+    data[4+name_size+purpose_size+key_id_size] = bufsize;
     memcpy(data, file_buf , bufsize);
 
-    // print_buf(data, )
+    print_buf(data, 200 );
     // KEY_ID_SIZE;
     // ctx->config->name;
     // ctx->config->purpose;
