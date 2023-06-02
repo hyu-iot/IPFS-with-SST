@@ -544,29 +544,25 @@ void request_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
         }
     }
     fclose(fin);
-    print_buf(session_ctx->s_key.key_id,key_id_size);
-    print_buf(ctx->config->name,name_size);
-    print_buf(ctx->config->purpose,purpose_size);
-    print_buf(file_buf,bufsize);
+    // print_buf(session_ctx->s_key.key_id,key_id_size);
+    // print_buf(ctx->config->name,name_size);
+    // print_buf(ctx->config->purpose,purpose_size);
+    // print_buf(file_buf,bufsize);
     unsigned char data[MAX_PAYLOAD_LENGTH];
     data[0] = DATA_UPLOAD;
     // memcpy(temp, iv, iv_size);
     // name, purpose, keyid, hash value
     data[1] = name_size;
-    memcpy(data,ctx->config->name, name_size);
+    memcpy(data+2,ctx->config->name, name_size);
     data[2+name_size] = purpose_size;
-    memcpy(data,ctx->config->purpose,purpose_size);
+    memcpy(data+3+name_size,ctx->config->purpose,purpose_size);
     data[3+name_size+purpose_size] = key_id_size;
-    memcpy(data,session_ctx->s_key.key_id,key_id_size);
+    memcpy(data+4+name_size+purpose_size,session_ctx->s_key.key_id,key_id_size);
     data[4+name_size+purpose_size+key_id_size] = bufsize;
-    memcpy(data, file_buf , bufsize);
+    memcpy(data+5+name_size+purpose_size+key_id_size, file_buf , bufsize);
+    write(sock,data,5+name_size+purpose_size+key_id_size+bufsize);
+    // print_buf(data, 5+name_size+purpose_size+key_id_size+bufsize );
 
-    print_buf(data, 200 );
-    // KEY_ID_SIZE;
-    // ctx->config->name;
-    // ctx->config->purpose;
-    // session_ctx->s_key.key_id;
-    // TODO: make one buffer
 
 }
 
