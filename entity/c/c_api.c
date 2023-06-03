@@ -445,7 +445,7 @@ void file_download_decrypt(SST_session_ctx_t *session_ctx)
     if (0 == access(file_name,F_OK))
     {
         printf("%s 파일이 존재합니다.\n", file_name);
-        return ;
+        // return ;
     }
     else
     {
@@ -588,4 +588,32 @@ void receive_from_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
 
     printf("내용이 도착했습니다 :)\n");
     print_buf(received_buf,received_buf_length);
+    unsigned char *key_id = NULL;
+    unsigned char *command = NULL;
+    
+    int key_id_size, command_size;
+    key_id_size = received_buf[1];
+    command_size = received_buf[2+key_id_size];
+    printf("%d, %d\n", key_id_size,command_size);
+
+    key_id = malloc(sizeof(char) * (key_id_size + 1));
+    memcpy(key_id,received_buf+2,key_id_size);
+    command = malloc(sizeof(char) * (command_size + 1));
+    memcpy(command,received_buf+3+key_id_size,command_size);
+    print_buf(key_id,key_id_size);
+    print_buf(command,command_size);
+
+    unsigned int cipher_key_size = 16;
+    FILE *fp, *fin, *fout;
+    char *file_name = "enc_server.txt";
+    if (0 == access(file_name,F_OK))
+    {
+        printf("%s 파일이 존재합니다.\n", file_name);
+        return ;
+    }
+    else
+    {
+        fp = popen(command, "r");
+        pclose(fp);
+    }
 }

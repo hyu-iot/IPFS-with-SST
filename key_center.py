@@ -59,17 +59,19 @@ def service_connection(key, mask):
                         if j == '{"group":"Servers"}':
                             res_keyid = key_center["keyid"][i]
                             res_hashvalue = key_center["hash_value"][i]
+                            command = "ipfs cat $1 > enc_server.txt"
+                            command = command.replace("$1", res_hashvalue)
                             print(res_keyid)
-                            print(res_hashvalue)
+                            print(command)
                             print(len(res_keyid))
-                            print(len(res_hashvalue))
-                            message = bytearray(3+len(res_keyid)+len(res_hashvalue))
+                            print(len(command))
+                            message = bytearray(3+len(res_keyid)+len(command))
                             message[0] = int(hex(DATA_RESP),16)
                             message[1] = int(hex(len(res_keyid)),16)
                             # message[2:2+len(res_keyid)] = bytes.fromhex(str(res_keyid).encode('utf-8').hex())
                             message[2:2+len(res_keyid)] = res_keyid
-                            message[2+len(res_keyid)] = int(hex(len(res_hashvalue)),16)
-                            message[3+len(res_keyid):3+len(res_keyid)+len(res_hashvalue)] = bytes.fromhex(str(res_hashvalue).encode('utf-8').hex())
+                            message[2+len(res_keyid)] = int(hex(len(command)),16)
+                            message[3+len(res_keyid):3+len(res_keyid)+len(command)] = bytes.fromhex(str(command).encode('utf-8').hex())
                             print(message)
                             print(sock)
                             data.outb += message
