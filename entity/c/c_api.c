@@ -580,6 +580,12 @@ void receive_from_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
     memcpy(data+2,ctx->config->name, name_size);
 
     write(sock, data, 2 + name_size);
+    sleep(3);
+    unsigned char received_buf[128];
+    printf("%x\n",received_buf);
+    unsigned int received_buf_length =
+        read(sock, received_buf, sizeof(received_buf));
 
-
+    printf("내용이 도착했습니다 :)\n");
+    print_buf(received_buf,received_buf_length);
 }

@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "c_crypto.h": "c"
+        "c_crypto.h": "c",
+        "iomanip": "c",
+        "istream": "c",
+        "locale": "c"
     }
 }
