@@ -572,4 +572,14 @@ void receive_from_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
     connect_as_client((const char *)ctx->config->keycenter_ip_addr,
                       (const char *)ctx->config->keycenter_port_num, &sock);
     int DATA_DOWNLOAD = 1;
+    int name_size;
+    name_size = sizeof(ctx->config->name);
+    unsigned char data[MAX_PAYLOAD_LENGTH];
+    data[0] = DATA_DOWNLOAD;
+    data[1] = name_size;
+    memcpy(data+2,ctx->config->name, name_size);
+
+    write(sock, data, 2 + name_size);
+
+
 }

@@ -36,19 +36,20 @@ def service_connection(key, mask):
                 # name, purpose, keyid, hash value
                 name_size = recv_data[1] 
                 print(type(name_size),name_size)
-                name = recv_data[2:2+name_size].decode('utf-8').replace("\n","")
-                print(name)
+                # name = recv_data[2:2+name_size].decode('utf-8').replace("\n","")
+                name = recv_data[2:2+name_size].decode('utf-8').strip("\x00")
+                key_center["name"].append(name)
                 purpose_size = recv_data[2+name_size]
-                purpose = recv_data[3+name_size:3+name_size+purpose_size].decode('utf-8').replace("\n","")
-                print(purpose,purpose_size)
-                
+                purpose = recv_data[3+name_size:3+name_size+purpose_size].decode('utf-8').strip("\x00")
+                key_center["purpose"].append(purpose)
                 keyid_size = recv_data[3+name_size+purpose_size]
                 keyid = recv_data[4+name_size+purpose_size:4+name_size+purpose_size+keyid_size]
-                print(keyid,keyid_size)
+                key_center["keyid"].append(keyid)
                 hash_value_size = recv_data[4+name_size+purpose_size+keyid_size]
-                hash_value = recv_data[5+name_size+purpose_size+keyid_size:5+name_size+purpose_size+keyid_size+hash_value_size]
-                print(hash_value,hash_value_size)
+                hash_value = recv_data[5+name_size+purpose_size+keyid_size:5+name_size+purpose_size+keyid_size+hash_value_size].decode('utf-8')
+                key_center["hash_value"].append(hash_value)
 
+                print(key_center)
             elif recv_data[1] == DATA_DOWNLOAD_REQ:
                 print(recv_data)
 
