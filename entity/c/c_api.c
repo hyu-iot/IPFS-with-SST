@@ -449,8 +449,9 @@ void file_download_decrypt(SST_session_ctx_t *session_ctx)
     }
     else
     {
-        fp = popen("ipfs cat QmX5NKpskdhPeEBwVLztE3hKjYJF8mLi93qrM67orVfdAY > enc_server.txt", "r");
-        pclose(fp);
+        // fp = popen("ipfs cat QmX5NKpskdhPeEBwVLztE3hKjYJF8mLi93qrM67orVfdAY > enc_server.txt", "r");
+        // pclose(fp);
+        printf("??\n");
     }
     
     fin = fopen("enc_server.txt","r");
@@ -509,7 +510,7 @@ void file_download_decrypt(SST_session_ctx_t *session_ctx)
 
 }
 // transfer the information including hash value, request info, response info, sessionkey id.
-void request_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
+void upload_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
 {
     int sock;
     connect_as_client((const char *)ctx->config->keycenter_ip_addr,
@@ -566,7 +567,7 @@ void request_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
 
 }
 
-void receive_from_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
+void download_from_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
 {
     int sock;
     connect_as_client((const char *)ctx->config->keycenter_ip_addr,

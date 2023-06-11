@@ -78,6 +78,10 @@ def service_connection(key, mask):
                             
                             sent = sock.send(data.outb) 
                             data.outb = data.outb[sent:]
+                            log_center["name"].append(name)
+                            log_center["hash_value"].append(res_hashvalue)
+                            log_center["keyid"].append(res_keyid)
+                
 
 
         else:
@@ -108,4 +112,7 @@ except KeyboardInterrupt:
 finally:
     lsock.close()
     sel.close()
+    print("-------------LOG result-------------")
+    print(log_center)
+    
     print("Finished")

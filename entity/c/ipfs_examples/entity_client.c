@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     file_encrypt_upload(session_ctx);
     sleep(3);
     // transfer the information including hash value, request info, response info, sessionkey id.
-    request_to_keycenter(session_ctx, ctx);
+    upload_to_keycenter(session_ctx, ctx);
 
     free(session_ctx);
 

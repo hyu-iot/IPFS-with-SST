@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
         server_secure_comm_setup(ctx, clnt_sock, &s_key_list);
     sleep(10);    
     // request the hash information.
-    receive_from_keycenter(session_ctx, ctx);
+    download_from_keycenter(session_ctx, ctx);
     sleep(5);
     file_download_decrypt(session_ctx);
     close(serv_sock);
