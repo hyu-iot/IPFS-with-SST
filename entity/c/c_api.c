@@ -510,11 +510,11 @@ void file_download_decrypt(SST_session_ctx_t *session_ctx)
 
 }
 // transfer the information including hash value, request info, response info, sessionkey id.
-void upload_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
+void upload_to_datamanagement(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
 {
     int sock;
-    connect_as_client((const char *)ctx->config->keycenter_ip_addr,
-                      (const char *)ctx->config->keycenter_port_num, &sock);
+    connect_as_client((const char *)ctx->config->datamanagement_ip_addr,
+                      (const char *)ctx->config->datamanagement_port_num, &sock);
 
     int key_id_size, name_size, purpose_size;
     key_id_size = sizeof(session_ctx->s_key.key_id);
@@ -567,11 +567,11 @@ void upload_to_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
 
 }
 
-void download_from_keycenter(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
+void download_from_datamanagement(SST_session_ctx_t *session_ctx, SST_ctx_t *ctx)
 {
     int sock;
-    connect_as_client((const char *)ctx->config->keycenter_ip_addr,
-                      (const char *)ctx->config->keycenter_port_num, &sock);
+    connect_as_client((const char *)ctx->config->datamanagement_ip_addr,
+                      (const char *)ctx->config->datamanagement_port_num, &sock);
     int DATA_DOWNLOAD = 1;
     int name_size;
     name_size = sizeof(ctx->config->name);

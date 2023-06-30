@@ -15,8 +15,8 @@
 #define AUTH_INFO_PORT 7
 #define ENTITY_SERVER_INFO_IP_ADDRESS 8
 #define ENTITY_SERVER_INFO_PORT_NUMBER 9
-#define KEYCENTER_INFO_IP_ADDRESS 11
-#define KEYCENTER_INFO_PORT_NUMBER 12
+#define datamanagement_INFO_IP_ADDRESS 11
+#define datamanagement_INFO_PORT_NUMBER 12
 #define NETWORK_PROTOCOL 10
 
 typedef struct {
@@ -30,8 +30,8 @@ typedef struct {
     char entity_server_ip_addr[17];
     char entity_server_port_num[6];
     char network_protocol[4];
-    char keycenter_ip_addr[17];
-    char keycenter_port_num[6];
+    char datamanagement_ip_addr[17];
+    char datamanagement_port_num[6];
 
 } config_t;
 

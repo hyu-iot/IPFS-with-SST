@@ -10,8 +10,8 @@ const char authInfo_ip_address[] = "auth.ip.address";
 const char authInfo_port[] = "auth.port.number";
 const char entity_serverInfo_ip_address[] = "entity.server.ip.address";
 const char entity_serverInfo_port_number[] = "entity.server.port.number";
-const char keycenter_ip_address[] = "keycenter.ip.address";
-const char keycenter_port_number[] = "keycenter.port.number";
+const char datamanagement_ip_address[] = "datamanagement.ip.address";
+const char datamanagement_port_number[] = "datamanagement.port.number";
 const char network_protocol[] = "network.protocol";
 
 int get_key_value(char *ptr) {
@@ -35,10 +35,10 @@ int get_key_value(char *ptr) {
         return ENTITY_SERVER_INFO_PORT_NUMBER;
     else if (strcmp(ptr, network_protocol) == 0)
         return NETWORK_PROTOCOL;
-    else if (strcmp(ptr, keycenter_ip_address) == 0)
-        return KEYCENTER_INFO_IP_ADDRESS;
-    else if (strcmp(ptr, keycenter_port_number) == 0)
-        return KEYCENTER_INFO_PORT_NUMBER;
+    else if (strcmp(ptr, datamanagement_ip_address) == 0)
+        return datamanagement_INFO_IP_ADDRESS;
+    else if (strcmp(ptr, datamanagement_port_number) == 0)
+        return datamanagement_INFO_PORT_NUMBER;
     else
         return -1;
 }
@@ -110,15 +110,15 @@ config_t *load_config(char *path) {
                     printf("Network Protocol: %s\n", ptr);
                     strcpy(c->network_protocol, ptr);
                     break;
-                case KEYCENTER_INFO_IP_ADDRESS:
+                case datamanagement_INFO_IP_ADDRESS:
                     ptr = strtok(NULL, delimiters);
-                    printf("IP address of keycenter: %s\n", ptr);
-                    strcpy(c->keycenter_ip_addr, ptr);
+                    printf("IP address of datamanagement: %s\n", ptr);
+                    strcpy(c->datamanagement_ip_addr, ptr);
                     break;
-                case KEYCENTER_INFO_PORT_NUMBER:
+                case datamanagement_INFO_PORT_NUMBER:
                     ptr = strtok(NULL, delimiters);
-                    printf("Port number of keycenter: %s\n", ptr);
-                    strcpy(c->keycenter_port_num, ptr);
+                    printf("Port number of datamanagement: %s\n", ptr);
+                    strcpy(c->datamanagement_port_num, ptr);
                     break;            }
             break;
         }
